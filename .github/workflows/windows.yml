@@ -1,0 +1,28 @@
+name: Windows
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    env:
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+      CSC_IDENTITY_AUTO_DISCOVERY: "false"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install
+        run: npm ci
+      - name: Build installer and portable
+        run: npm run desktop:build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Mahyar-Image-Tools-Windows
+          path: desktop/release/*.exe
+          if-no-files-found: error

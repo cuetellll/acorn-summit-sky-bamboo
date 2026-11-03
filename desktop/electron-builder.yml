@@ -1,0 +1,40 @@
+appId: com.mahyar.imagetools
+productName: Mahyar Image Tools
+copyright: Copyright © Mahyar
+electronVersion: 33.4.11
+asar: true
+npmRebuild: false
+directories:
+  output: desktop/release
+  buildResources: desktop/build
+files:
+  - package.json
+  - desktop/dist/**/*
+  - desktop/electron/**/*
+  - desktop/build/icon.png
+extraResources:
+  - from: public/tessdata
+    to: tessdata
+  - from: public/ocr
+    to: ocr
+win:
+  icon: desktop/build/icon.png
+  executableName: MahyarImageTools
+  target:
+    - target: nsis
+      arch:
+        - x64
+    - target: portable
+      arch:
+        - x64
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  artifactName: Mahyar-Image-Tools-Setup.${ext}
+  shortcutName: Mahyar Image Tools
+  uninstallDisplayName: Mahyar Image Tools
+  createDesktopShortcut: true
+  createStartMenuShortcut: always
+portable:
+  artifactName: Mahyar-Image-Tools-Portable.${ext}

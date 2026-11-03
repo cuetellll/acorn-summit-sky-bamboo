@@ -1,0 +1,141 @@
+@import "@fontsource/vazirmatn/arabic-400.css";
+@import "@fontsource/vazirmatn/arabic-500.css";
+@import "@fontsource/vazirmatn/arabic-700.css";
+@import "@fontsource/vazirmatn/latin-400.css";
+@import "@fontsource/vazirmatn/latin-500.css";
+@import "@fontsource/vazirmatn/latin-700.css";
+@import "tailwindcss";
+@source "./";
+
+@theme {
+  --color-bg: #071016;
+  --color-surface: #0e242c;
+  --color-fg: #e8fbff;
+  --color-muted: #8eb6c0;
+  --color-primary: #3ef0ff;
+  --color-border: #1c5460;
+  --font-sans: "Vazirmatn", system-ui, sans-serif;
+  --shadow-glow: 0 0 28px rgb(62 240 255 / 0.35);
+  --shadow-panel: inset 0 1px 0 rgb(255 255 255 / 0.06), 0 18px 50px rgb(0 0 0 / 0.28);
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100%;
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    line-height: 1.55;
+    background-image:
+      radial-gradient(ellipse 55% 42% at 50% -12%, rgb(62 240 255 / 0.16), transparent 58%),
+      linear-gradient(rgb(62 240 255 / 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(62 240 255 / 0.045) 1px, transparent 1px);
+    background-size: auto, 48px 48px, 48px 48px;
+    animation: mahyar-grid 28s linear infinite;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  ::selection {
+    background: rgb(62 240 255 / 0.28);
+    color: var(--color-fg);
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+  }
+}
+
+@layer components {
+  .glass {
+    background: rgb(14 36 44 / 0.72);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-panel);
+    backdrop-filter: blur(18px);
+  }
+
+  .living-frame {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .living-frame::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(
+      from 0deg,
+      transparent 0 72%,
+      var(--color-primary) 86%,
+      transparent 100%
+    );
+    animation: mahyar-spin 8s linear infinite;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .logo-shell {
+    animation: mahyar-pulse 3.6s ease-in-out infinite;
+  }
+
+  .scan-line {
+    animation: mahyar-scan 1.8s linear infinite;
+  }
+}
+
+@keyframes mahyar-grid {
+  to {
+    background-position:
+      0 0,
+      48px 48px,
+      48px 0;
+  }
+}
+
+@keyframes mahyar-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes mahyar-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 12px rgb(62 240 255 / 0.28);
+  }
+  50% {
+    box-shadow: 0 0 26px rgb(62 240 255 / 0.6);
+  }
+}
+
+@keyframes mahyar-scan {
+  from {
+    transform: translateY(-12%);
+  }
+  to {
+    transform: translateY(108%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body,
+  .living-frame::before,
+  .logo-shell,
+  .scan-line {
+    animation: none;
+  }
+}

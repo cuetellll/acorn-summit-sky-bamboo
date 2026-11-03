@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>انتخاب ناحیه</title>
+    <style>
+      html, body { margin: 0; height: 100%; background: #071016; overflow: hidden; cursor: crosshair; user-select: none; }
+      img { position: fixed; inset: 0; width: 100vw; height: 100vh; object-fit: fill; }
+      #box { position: fixed; display: none; border: 2px solid #3ef0ff; box-shadow: 0 0 0 9999px rgb(7 16 22 / 0.5); }
+      #hint {
+        position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+        padding: 8px 14px; border-radius: 999px; color: #e8fbff;
+        background: rgb(14 36 44 / 0.82); border: 1px solid #1c5460;
+        font: 14px/1.4 Vazirmatn, Tahoma, sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <img id="shot" alt="" />
+    <div id="box"></div>
+    <p id="hint">بکش و رها کن · Esc لغو</p>
+    <script>
+      const img = document.getElementById("shot");
+      const box = document.getElementById("box");
+      let origin = null;
+      window.snip.onImage((dataUrl) => { img.src = dataUrl; });
+      window.addEventListener("pointerdown", (event) => {
+        if (event.button !== 0) return;
+        origin = { x: event.clientX, y: event.clientY };
+        box.style.display = "block";
+        box.style.left = origin.x + "px";
+        box.style.top = origin.y + "px";
+        box.style.width = "0px";
+        box.style.height = "0px";
+      });
+      window.addEventListener("pointermove", (event) => {
+        if (!origin) return;
+        const x = Math.min(origin.x, event.clientX);
+        const y = Math.min(origin.y, event.clientY);
+        box.style.left = x + "px";
+        box.style.top = y + "px";
+        box.style.width = Math.abs(event.clientX - origin.x) + "px";
+        box.style.height = Math.abs(event.clientY - origin.y) + "px";
+      });
+      window.addEventListener("pointerup", (event) => {
+        if (!origin) return;
+        const x = Math.min(origin.x, event.clientX);
+        const y = Math.min(origin.y, event.clientY);
+        const w = Math.abs(event.clientX - origin.x);
+        const h = Math.abs(event.clientY - origin.y);
+        origin = null;
+        if (w < 8 || h < 8 || !img.naturalWidth) return;
+        const scaleX = img.naturalWidth / window.innerWidth;
+        const scaleY = img.naturalHeight / window.innerHeight;
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.max(1, Math.round(w * scaleX));
+        canvas.height = Math.max(1, Math.round(h * scaleY));
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(
+          img,
+          Math.round(x * scaleX),
+          Math.round(y * scaleY),
+          canvas.width,
+          canvas.height,
+          0,
+          0,
+          canvas.width,
+          canvas.height,
+        );
+        window.snip.done(canvas.toDataURL("image/png"));
+      });
+      window.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") window.snip.cancel();
+      });
+      window.addEventListener("contextmenu", (event) => {
+        event.preventDefault();
+        window.snip.cancel();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,13 @@
+node_modules/
+.output/
+dist/
+desktop/dist/
+desktop/release/
+public/ocr/
+.nitro/
+.tanstack/
+.vercel/
+screenshots/
+artifacts/
+*.log
+.grok/
